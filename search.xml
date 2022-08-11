@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>map 常用方法</title>
+    <url>/2022/08/10/hello-world/</url>
+    <content><![CDATA[<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Playwright Web自动化测试</title>
+    <url>/2022/08/11/playwright/</url>
+    <content><![CDATA[<h2 id="一、自动化测试步骤"><a href="#一、自动化测试步骤" class="headerlink" title="一、自动化测试步骤"></a>一、自动化测试步骤</h2><h3 id="1、添加-playwright-依赖并安装浏览器"><a href="#1、添加-playwright-依赖并安装浏览器" class="headerlink" title="1、添加 playwright 依赖并安装浏览器"></a>1、添加 playwright 依赖并安装浏览器</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm i -D @playwright/test   //添加playwright依赖</span><br><span class="line">npx playwright install      //安装playwright支持的浏览器</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、根目录下创建-tests-x2F-example-spec-js-来定义测试"><a href="#2、根目录下创建-tests-x2F-example-spec-js-来定义测试" class="headerlink" title="2、根目录下创建 tests&#x2F;example.spec.js 来定义测试"></a>2、根目录下创建 tests&#x2F;example.spec.js 来定义测试</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const &#123; test, expect &#125; = require(&#x27;@playwright/test&#x27;);</span><br><span class="line"></span><br><span class="line">test(&#x27;basic test&#x27;, async (&#123; page &#125;) =&gt; &#123;</span><br><span class="line">  await page.goto(&#x27;https://playwright.dev/&#x27;);   //跳转页面</span><br><span class="line">  const title = page.locator(&#x27;.navbar__inner .navbar__title&#x27;);</span><br><span class="line">  await expect(title).toHaveText(&#x27;Playwright&#x27;);  //断言标题为Playwright</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、运行测试（所有）"><a href="#3、运行测试（所有）" class="headerlink" title="3、运行测试（所有）"></a>3、运行测试（所有）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx playwright test     //浏览器以无头的形式进行了测试</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、在根目录下创建一个配置文件-playwright-config-ts，可以为每个浏览器配置创建一个“项目”来运行-Chromium、Firefox-和-WebKit-中的每个测试；配置如下"><a href="#4、在根目录下创建一个配置文件-playwright-config-ts，可以为每个浏览器配置创建一个“项目”来运行-Chromium、Firefox-和-WebKit-中的每个测试；配置如下" class="headerlink" title="4、在根目录下创建一个配置文件 playwright.config.ts，可以为每个浏览器配置创建一个“项目”来运行 Chromium、Firefox 和 WebKit 中的每个测试；配置如下"></a>4、在根目录下创建一个配置文件 playwright.config.ts，可以为每个浏览器配置创建一个“项目”来运行 Chromium、Firefox 和 WebKit 中的每个测试；配置如下</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// playwright.config.js</span><br><span class="line">// @ts-check</span><br><span class="line">const &#123; devices &#125; = require(&#x27;@playwright/test&#x27;);</span><br><span class="line"></span><br><span class="line">/** @type &#123;import(&#x27;@playwright/test&#x27;).PlaywrightTestConfig&#125; */</span><br><span class="line">const config = &#123;</span><br><span class="line">  forbidOnly: !!process.env.CI,</span><br><span class="line">  retries: process.env.CI ? 2 : 0,</span><br><span class="line">  use: &#123;</span><br><span class="line">    trace: &#x27;on-first-retry&#x27;,</span><br><span class="line">  &#125;,</span><br><span class="line">  projects: [</span><br><span class="line">    &#123;</span><br><span class="line">      name: &#x27;chromium&#x27;,</span><br><span class="line">      use: &#123; ...devices[&#x27;Desktop Chrome&#x27;] &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    //&#123;</span><br><span class="line">    //   name: &#x27;firefox&#x27;,</span><br><span class="line">    //   use: &#123; ...devices[&#x27;Desktop Firefox&#x27;] &#125;,</span><br><span class="line">    // &#125;,</span><br><span class="line">    // &#123;</span><br><span class="line">    //   name: &#x27;webkit&#x27;,</span><br><span class="line">    //   use: &#123; ...devices[&#x27;Desktop Safari&#x27;] &#125;,</span><br><span class="line">    // &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">module.exports = config;</span><br></pre></td></tr></table></figure>
+
+<p>默认在多个浏览器中进行测试<br>npx playwright test</p>
+<p>采用–project 可以在单个浏览器测试<br>npx playwright test –project&#x3D;firefox</p>
+<p>常用的命令行模式</p>
+<p>运行所有测试<br>npx playwright test</p>
+<p>运行单个测试文件<br>npx playwright test tests&#x2F;todo-page.spec.ts</p>
+<p>运行一组测试文件<br>npx playwright test tests&#x2F;todo-page&#x2F; tests&#x2F;landing-page&#x2F;</p>
+<p>运行 my-spec 或 my-spec-2 文件名中的测试<br>npx playwright test my-spec my-spec-2</p>
+<p>使用标题运行测试<br>npx playwright test -g “add a todo item”</p>
+<p>在有头浏览器中运行测试<br>npx playwright test –headed</p>
+<p>在特定浏览器中运行测试<br>npx playwright test –project&#x3D;firefox</p>
+<p>禁用 并行化<br>npx playwright test –workers&#x3D;1</p>
+<p>选择 reporter<br>npx playwright test –reporter&#x3D;dot</p>
+<p>在调试模式下运行 Playwright Inspector<br>npx playwright test –debug</p>
+<p>帮助<br>npx playwright test –help</p>
+<p>模拟手机设备运行测试<br>npx playwright codegen –device&#x3D;”iPhone 11” <a href="https://xsheng.frp.eastcoal.club/">https://xsheng.frp.eastcoal.club/</a></p>
+<h3 id="5、采用-open-或-codegen-启动-Playwright-CLI"><a href="#5、采用-open-或-codegen-启动-Playwright-CLI" class="headerlink" title="5、采用 open 或 codegen 启动 Playwright CLI"></a>5、采用 open 或 codegen 启动 Playwright CLI</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx playwright codegen wikipedia.org</span><br></pre></td></tr></table></figure>
+
+<p>开启 Playwright Inspector 是 GUI 工具，可帮助创作和调试 Playwright 脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$env:PWDEBUG=1   //脚本将在第一个 Playwright 语句处暂停</span><br><span class="line">npm run test</span><br></pre></td></tr></table></figure>
+
+<p>使用“跳过”操作或恢复脚本跳过每个操作，而无需进一步暂停</p>
+<h3 id="6、Playwright-Trace-Viewer-是一个-GUI-工具，可帮助在脚本运行后探索记录的-Playwright-轨迹。运行"><a href="#6、Playwright-Trace-Viewer-是一个-GUI-工具，可帮助在脚本运行后探索记录的-Playwright-轨迹。运行" class="headerlink" title="6、Playwright Trace Viewer 是一个 GUI 工具，可帮助在脚本运行后探索记录的 Playwright 轨迹。运行"></a>6、Playwright Trace Viewer 是一个 GUI 工具，可帮助在脚本运行后探索记录的 Playwright 轨迹。运行</h3><h3 id="测试时会生成-trace-zip-文件，运行-trace-zip-文件可以生成-Playwright-Trace-Viewer。"><a href="#测试时会生成-trace-zip-文件，运行-trace-zip-文件可以生成-Playwright-Trace-Viewer。" class="headerlink" title="测试时会生成 trace.zip 文件，运行 trace.zip 文件可以生成 Playwright Trace Viewer。"></a>测试时会生成 trace.zip 文件，运行 trace.zip 文件可以生成 Playwright Trace Viewer。</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx playwright show-trace 绝对路径/trace.zip</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>测试</tag>
+      </tags>
+  </entry>
+</search>
